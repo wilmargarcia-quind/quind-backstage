@@ -16,4 +16,7 @@ node_modules/
 dist/
 build/
 .next/
-.mcp.json
+
+# Environment variables
+.env.local
+.env*.local
