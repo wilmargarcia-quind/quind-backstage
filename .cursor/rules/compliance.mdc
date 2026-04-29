@@ -1,0 +1,8 @@
+---
+description: "Compliance del proyecto"
+globs: "**/*"
+alwaysApply: true
+---
+
+## Compliance
+Acceso a documentos técnicos restringido por rol RBAC — ningún colaborador accede a contenido fuera de su nivel (Dev / TL / Coordinador / Gerencia)

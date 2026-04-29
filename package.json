@@ -1,0 +1,12 @@
+{
+  "name": "QBCK-NEXT",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "jest": "^29.7.0"
+  }
+}

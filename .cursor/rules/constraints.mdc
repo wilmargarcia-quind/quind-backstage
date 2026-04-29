@@ -1,0 +1,13 @@
+---
+description: "Restricciones blocking del proyecto"
+globs: "**/*"
+alwaysApply: true
+---
+
+## Constraints
+- [High] Auth exclusivamente vía GitHub OAuth — la organización ya vive en GitHub, no se puede usar otro proveedor
+- [High] Los documentos son read-only desde Git (quind-architecture-docs) — nunca se persisten en base de datos
+- [Medium] Sin backend dedicado en MVP — toda la lógica de servidor vive en Next.js Route Handlers (BFF pattern)
+- [Medium] Equipo con skill fuerte en TypeScript/React pero limitado en backend pesado — stack debe mantenerse dentro de ese perfil
+- [Medium] Presupuesto de infraestructura < 80 USD/mes (staging + prod en Cloud Run + Postgres gestionado)
+- [High] MVP deadline: 2026-05-30 — fecha fija por KR1 del OKR Q2 2026

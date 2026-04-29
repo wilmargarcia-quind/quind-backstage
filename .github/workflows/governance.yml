@@ -1,0 +1,50 @@
+name: Agentic Governance + Security Scan
+
+on:
+  pull_request:
+    branches: ["**"]
+  push:
+    branches: [main, develop]
+
+jobs:
+  security-and-governance:
+    name: Gitleaks + Guardian Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # Necesario para OIDC con Google Cloud Workload Identity Federation
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history para scan completo (Política SDLC §7.3)
+
+      # --- Política SDLC QUIND v1.0 §7.3: gitleaks en CI ---
+      - name: Gitleaks — detect secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # --- OIDC auth a Google Cloud — sin secrets, transparente para developers ---
+      - name: Authenticate to Google Cloud (OIDC)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/587459711970/locations/global/workloadIdentityPools/github-org-pool/providers/github-org-provider
+          service_account: github-actions-org@development-test-456814.iam.gserviceaccount.com
+
+      - name: Configure npm for Artifact Registry
+        run: |
+          npm config set @agentic-suite:registry https://us-central1-npm.pkg.dev/development-test-456814/agentic-suite/
+          npx google-artifactregistry-auth --yes
+
+      - name: Install Agentic CLI
+        run: npm install -g @agentic-suite/cli
+
+      - name: Run Guardian analysis
+        env:
+          AGENTIC_TOKEN: ${{ secrets.AGENTIC_TOKEN }}
+        run: agentic check --json --fail-under 60

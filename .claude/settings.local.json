@@ -1,0 +1,7 @@
+{
+  "enabledMcpjsonServers": [
+    "guardian",
+    "devcore",
+    "tech-lead-manager"
+  ]
+}

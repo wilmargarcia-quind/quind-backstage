@@ -1,0 +1,25 @@
+---
+description: "Coding standards del proyecto"
+globs: "**/*"
+alwaysApply: true
+---
+
+## Coding standards
+Test Coverage Threshold: Achieve a minimum of 80% test coverage for domain and application logic. [language=general] [category=inferred]
+Code Readability: Minimize comments, ensuring code is self-explanatory. [language=general] [category=inferred]
+OWASP Top 10 Security Controls: Implement controls for OWASP Top 10 vulnerabilities, including Casbin RBAC, signed JWTs with expiration, bcrypt for password hashing, and using SQLAlchemy ORM to prevent injection. [language=general] [category=inferred]
+Centralized Error Handling: Implement a `GlobalExceptionHandler` (@ControllerAdvice) to map `DomainException` hierarchy to appropriate HTTP status codes for REST APIs. [language=general] [category=inferred]
+REST API Design & Error Handling: Use Request/Response DTOs for API interactions, avoiding direct exposure of Domain Entities. Implement JSR-303/Spring Validation for input and a `GlobalExceptionHandler` to map Domain Exceptions to appropriate HTTP status codes. [language=general] [category=inferred]
+Input and Business Rule Validation: Mandatory input validation (e.g., JSR-303 in controllers) and domain business rule validation (e.g., positive quantities, minimum order values) must be applied. [language=general] [category=inferred]
+Layered Testing Strategy: Implement a testing hierarchy: pure unit tests for domain logic (JUnit 5, AssertJ), service tests for application logic (Mockito for output ports), and integration tests for infrastructure adapters (Spring Boot Test). [language=general] [category=inferred]
+Single Responsibility Principle: Cada clase o módulo debe tener una única responsabilidad bien definida y solo una razón para cambiar. [language=agnostic] [category=SOLID]
+Naming Conventions: Use descriptive variable and method names in English. [language=general] [category=inferred]
+Centralized Security Controls: Authentication (JWT) and authorization (Casbin RBAC) must be implemented as Starlette middleware, centralizing security logic and preventing duplication. [language=general] [category=inferred]
+
+## Patrones
+Strategy: Lets you define a family of algorithms, put each of them into a separate class, and make their objects interchangeable. [category=Behavioral]
+Repository: Mediates between the domain and data mapping layers using a collection-like interface for accessing domain objects. [category=Architectural]
+Middleware Chain: Centralizes authentication (JWT) and authorization (Casbin RBAC) logic by implementing them as Starlette middleware that intercepts all requests before reaching the handler. [category=general]
+Data Transfer Object (DTO): An object used to encapsulate data for transfer between layers, often used to decouple the domain model from the presentation or external API layer. [category=general]
+Dependency Injection: A technique where an object receives other objects that it depends on, promoting loose coupling and testability. [category=general]
+Vertical Slice: Structuring domain models where each model has its own folder with port abstractions and entity definitions. [category=general]

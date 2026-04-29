@@ -1,0 +1,19 @@
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Guardian Suite
+.devcore-attribution.jsonl
+.agentic.json
+
+# Node
+node_modules/
+dist/
+build/
+.next/
+.mcp.json
