@@ -6,6 +6,8 @@ export interface DocMetadata {
   category: string
   tags: string[]
   role_visibility: UserRole[]
+  role_level?: string
+  order?: number
 }
 
 export interface Doc extends DocMetadata {
