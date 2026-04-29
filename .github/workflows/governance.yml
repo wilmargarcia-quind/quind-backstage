@@ -38,24 +38,36 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Check GCP credentials
+        id: creds
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: |
+          if [ -n "$GOOGLE_CREDENTIALS" ]; then
+            echo "available=true" >> $GITHUB_OUTPUT
+          else
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "::warning::GOOGLE_CREDENTIALS secret not configured — Guardian analysis skipped"
+          fi
+
       - name: Authenticate to Google Cloud
+        if: steps.creds.outputs.available == 'true'
         uses: google-github-actions/auth@v2
         with:
-          # WIF (preferred — requires pool provisioned in GCP):
-          #   workload_identity_provider: projects/587459711970/locations/global/workloadIdentityPools/github-org-pool/providers/github-org-provider
-          #   service_account: github-actions-org@development-test-456814.iam.gserviceaccount.com
-          # Fallback: service account key stored as GOOGLE_CREDENTIALS secret
           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       - name: Configure npm for Artifact Registry
+        if: steps.creds.outputs.available == 'true'
         run: |
           npm config set @agentic-suite:registry https://us-central1-npm.pkg.dev/development-test-456814/agentic-suite/
           npx google-artifactregistry-auth --yes
 
       - name: Install Agentic CLI
+        if: steps.creds.outputs.available == 'true'
         run: npm install -g @agentic-suite/cli
 
       - name: Run Guardian analysis
+        if: steps.creds.outputs.available == 'true'
         env:
           AGENTIC_TOKEN: ${{ secrets.AGENTIC_TOKEN }}
         run: agentic check --json --fail-under 60
