@@ -44,6 +44,9 @@ async function parseDocFile(filePath: string): Promise<Doc | null> {
         : ALL_ROLES,
       role_level: data.role_level ? String(data.role_level) : undefined,
       order: typeof data.order === "number" ? data.order : undefined,
+      status: data.status ? String(data.status) : undefined,
+      authors: Array.isArray(data.authors) ? data.authors.map(String) : undefined,
+      decision_date: data.decision_date ? String(data.decision_date) : undefined,
       content,
     }
   } catch {
