@@ -42,6 +42,8 @@ async function parseDocFile(filePath: string): Promise<Doc | null> {
       role_visibility: Array.isArray(data.role_visibility)
         ? (data.role_visibility as UserRole[])
         : ALL_ROLES,
+      role_level: data.role_level ? String(data.role_level) : undefined,
+      order: typeof data.order === "number" ? data.order : undefined,
       content,
     }
   } catch {
@@ -60,6 +62,16 @@ export async function loadDocsByRole(role: UserRole): Promise<DocMetadata[]> {
   return docs
     .filter((doc) => doc.role_visibility.includes(role))
     .map(({ content: _content, ...metadata }) => metadata)
+}
+
+export async function loadDocsByCategoryAndRole(
+  category: string,
+  role: UserRole
+): Promise<DocMetadata[]> {
+  const docs = await loadDocsByRole(role)
+  return docs
+    .filter((doc) => doc.category === category)
+    .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
 }
 
 export async function loadDocBySlug(
