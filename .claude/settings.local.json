@@ -3,5 +3,10 @@
     "guardian",
     "devcore",
     "tech-lead-manager"
-  ]
+  ],
+  "permissions": {
+    "allow": [
+      "mcp__tech-lead-manager__tlm_record_ai_attributions"
+    ]
+  }
 }

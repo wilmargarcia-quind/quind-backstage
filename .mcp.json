@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "guardian": {
+      "type": "sse",
+      "url": "https://langchain-guardian-devcore-pihnhikstq-uc.a.run.app/mcp/sse",
+      "headers": {
+        "X-API-Key": "56aa0aabcfd0134bd5ef48869bd8b0d26f2e097706154cd0"
+      }
+    },
+    "devcore": {
+      "type": "sse",
+      "url": "https://code-generator-pihnhikstq-uc.a.run.app/mcp/sse",
+      "headers": {
+        "X-API-Key": "9298616b872fc35d9610743b18b355864b5f1d368992671c7a22a243f3dbedb8"
+      }
+    },
+    "tech-lead-manager": {
+      "type": "sse",
+      "url": "https://tech-lead-management-pihnhikstq-uc.a.run.app/mcp/sse",
+      "headers": {
+        "X-API-Key": "1f61cdec10f30b08536b0f9e48f44431963aac7c73ee9edf6bb5bb691b1058d6"
+      }
+    }
+  }
+}
