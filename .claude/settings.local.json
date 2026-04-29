@@ -1,12 +1,13 @@
 {
+  "permissions": {
+    "allow": [
+      "mcp__tech-lead-manager__tlm_record_ai_attributions",
+      "mcp__tech-lead-manager__tlm_get_use_case_blueprint"
+    ]
+  },
   "enabledMcpjsonServers": [
     "guardian",
     "devcore",
     "tech-lead-manager"
-  ],
-  "permissions": {
-    "allow": [
-      "mcp__tech-lead-manager__tlm_record_ai_attributions"
-    ]
-  }
+  ]
 }
