@@ -2,20 +2,21 @@ import { redirect } from "next/navigation"
 import { auth, signIn } from "@/auth"
 
 interface LoginPageProps {
-  searchParams: { error?: string; callbackUrl?: string }
+  searchParams: Promise<{ error?: string; callbackUrl?: string }>
 }
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const session = await auth()
+  const { error, callbackUrl } = await searchParams
 
   if (session) {
-    redirect(searchParams.callbackUrl ?? "/dashboard")
+    redirect(callbackUrl ?? "/dashboard")
   }
 
   return (
     <main>
       <h1>Quind Backstage</h1>
-      {searchParams.error === "AccessDenied" && (
+      {error === "AccessDenied" && (
         <p>
           No tienes acceso a esta plataforma. Asegúrate de pertenecer a la
           organización Quind en GitHub.
@@ -25,7 +26,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         action={async () => {
           "use server"
           await signIn("github", {
-            redirectTo: searchParams.callbackUrl ?? "/dashboard",
+            redirectTo: callbackUrl ?? "/dashboard",
           })
         }}
       >
