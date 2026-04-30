@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { db } from "@/lib/db/client"
 import { okrs, keyResults } from "@/lib/db/schema"
 import type { UserRole } from "@/lib/auth/rbac"
@@ -22,12 +22,26 @@ function assertNotDev(role: UserRole): void {
   if (role === "Dev") throw new Error("Forbidden")
 }
 
+export async function findDistinctPeriods(): Promise<string[]> {
+  const rows = await db.selectDistinct({ period: okrs.period }).from(okrs)
+  return rows.map((r) => r.period).sort().reverse()
+}
+
 export async function findAllOkrs(
   role: UserRole,
-  coeId: string | null
+  coeId: string | null,
+  period?: string
 ): Promise<OkrWithKeyResults[]> {
+  const filters = []
   // TL con coeId conocido solo ve su CoE; sin coeId (dev bypass) ve todos
-  const where = role === "TL" && coeId !== null ? eq(okrs.coe_id, coeId) : undefined
+  if (role === "TL" && coeId !== null) filters.push(eq(okrs.coe_id, coeId))
+  if (period) filters.push(eq(okrs.period, period))
+
+  const where =
+    filters.length === 0 ? undefined
+    : filters.length === 1 ? filters[0]
+    : and(...filters)
+
   const rows = await db.query.okrs.findMany({ where, with: { keyResults: true } })
   return rows.map((row) => ({
     ...row,

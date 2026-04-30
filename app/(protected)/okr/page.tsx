@@ -17,6 +17,7 @@ export default async function OkrPage() {
       <header>
         <a href="/dashboard">← Dashboard</a>
         <h1>OKRs</h1>
+        <a href="/okr/panel">Ver panel →</a>
         {canCreate && <a href="/okr/new">+ Nuevo OKR</a>}
       </header>
 
