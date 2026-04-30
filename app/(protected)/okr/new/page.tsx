@@ -7,7 +7,7 @@ export default async function OkrNewPage() {
   const session = await auth()
   const role = session?.user?.role as UserRole | null
 
-  if (!role || (role !== "Coordinador" && role !== "Gerencia")) notFound()
+  if (!role || role === "Dev") notFound()
 
   return (
     <main>

@@ -19,7 +19,7 @@ export default async function OkrDetailPage({ params }: PageProps) {
   const okr = await findOkrById(id, role, null)
   if (!okr) notFound()
 
-  const canDelete = role === "Coordinador" || role === "Gerencia"
+  const canDelete = role !== "Dev"
   const canUpdate = role !== "Dev"
 
   return (

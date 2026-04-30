@@ -15,7 +15,7 @@ function calcAvgProgress(krs: { progress: number }[]): number {
 }
 
 function assertCanWrite(role: UserRole): void {
-  if (role !== "Coordinador" && role !== "Gerencia") throw new Error("Forbidden")
+  if (role === "Dev") throw new Error("Forbidden")
 }
 
 function assertNotDev(role: UserRole): void {

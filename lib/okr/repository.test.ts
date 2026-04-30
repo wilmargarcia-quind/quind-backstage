@@ -181,8 +181,10 @@ describe("createOkr", () => {
     await expect(createOkr(validInput, "Dev")).rejects.toThrow("Forbidden")
   })
 
-  it("throws Forbidden for TL role", async () => {
-    await expect(createOkr(validInput, "TL")).rejects.toThrow("Forbidden")
+  it("allows TL role to create", async () => {
+    const result = await createOkr(validInput, "TL")
+
+    expect(result.period).toBe("Q2-2026")
   })
 
   it("throws when no key_results provided", async () => {
@@ -222,8 +224,8 @@ describe("deleteOkr", () => {
     expect(mocks.deleteWhere).toHaveBeenCalledOnce()
   })
 
-  it("throws Forbidden for TL role", async () => {
-    await expect(deleteOkr("okr-1", "TL")).rejects.toThrow("Forbidden")
+  it("allows TL to delete", async () => {
+    await expect(deleteOkr("okr-1", "TL")).resolves.toBeUndefined()
   })
 
   it("throws Forbidden for Dev role", async () => {

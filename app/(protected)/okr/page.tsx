@@ -10,7 +10,7 @@ export default async function OkrPage() {
   if (!role) notFound()
 
   const okrs = await findAllOkrs(role, null)
-  const canCreate = role === "Coordinador" || role === "Gerencia"
+  const canCreate = role !== "Dev"
 
   return (
     <main>
