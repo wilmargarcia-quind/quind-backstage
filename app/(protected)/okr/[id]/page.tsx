@@ -3,6 +3,7 @@ import { auth } from "@/auth"
 import { findOkrById } from "@/lib/okr/repository"
 import { updateKrProgressAction, deleteOkrAction } from "@/lib/okr/actions"
 import { OKR_PROGRESS_VALUES } from "@/lib/okr/types"
+import { logAccessSilent } from "@/lib/audit/logger"
 import type { UserRole } from "@/lib/auth/rbac"
 
 interface PageProps {
@@ -18,6 +19,8 @@ export default async function OkrDetailPage({ params }: PageProps) {
 
   const okr = await findOkrById(id, role, null)
   if (!okr) notFound()
+
+  logAccessSilent(session.user.githubLogin ?? session.user.email ?? "unknown", "okr", id)
 
   const canDelete = role !== "Dev"
   const canUpdate = role !== "Dev"

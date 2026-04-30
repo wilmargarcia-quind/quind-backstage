@@ -22,6 +22,9 @@ export default async function DashboardPage() {
           {role && role !== "Dev" && (
             <li><a href="/okr/panel">Panel OKRs</a></li>
           )}
+          {(role === "Coordinador" || role === "Gerencia") && (
+            <li><a href="/audit">Audit log</a></li>
+          )}
         </ul>
       </nav>
     </main>

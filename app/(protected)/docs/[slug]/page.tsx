@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { auth } from "@/auth"
 import { loadDocBySlug } from "@/lib/docs/loader"
 import MarkdownRenderer from "@/components/docs/MarkdownRenderer"
+import { logAccessSilent } from "@/lib/audit/logger"
 import type { UserRole } from "@/lib/auth/rbac"
 
 interface PageProps {
@@ -18,6 +19,8 @@ export default async function DocPage({ params }: PageProps) {
   const doc = await loadDocBySlug(slug, role)
 
   if (!doc) notFound()
+
+  logAccessSilent(session.user.githubLogin ?? session.user.email ?? "unknown", "doc", slug)
 
   return (
     <main>

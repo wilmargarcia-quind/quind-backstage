@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { auth } from "@/auth"
 import { loadAdrBySlug } from "@/lib/adr/loader"
 import MarkdownRenderer from "@/components/docs/MarkdownRenderer"
+import { logAccessSilent } from "@/lib/audit/logger"
 import type { UserRole } from "@/lib/auth/rbac"
 
 interface PageProps {
@@ -16,6 +17,8 @@ export default async function AdrDetailPage({ params }: PageProps) {
 
   const adr = await loadAdrBySlug(slug, role)
   if (!adr) notFound()
+
+  logAccessSilent(session.user.githubLogin ?? session.user.email ?? "unknown", "adr", slug)
 
   return (
     <main>
