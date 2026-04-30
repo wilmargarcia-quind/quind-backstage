@@ -32,6 +32,7 @@ export const authConfig = {
     },
     session({ session, token }) {
       session.user.role = token.role ?? null
+      session.user.githubLogin = token.githubLogin ?? null
       return session
     },
   },

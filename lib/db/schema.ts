@@ -25,6 +25,14 @@ export const keyResults = pgTable("key_results", {
   progress: integer("progress").notNull().default(0),
 })
 
+export const accessLogs = pgTable("access_logs", {
+  id: text("id").primaryKey(),
+  github_login: text("github_login").notNull(),
+  resource_type: text("resource_type").notNull(), // "doc" | "adr" | "okr" | "onboarding" | "career"
+  resource_slug: text("resource_slug").notNull(),
+  accessed_at: timestamp("accessed_at").defaultNow().notNull(),
+})
+
 export const okrsRelations = relations(okrs, ({ many }) => ({
   keyResults: many(keyResults),
 }))
