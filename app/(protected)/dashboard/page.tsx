@@ -14,6 +14,7 @@ export default async function DashboardPage() {
 
       <nav>
         <ul>
+          <li><a href="/search">Búsqueda</a></li>
           <li><a href="/docs">Documentación</a></li>
           <li><a href="/onboarding">Onboarding</a></li>
           <li><a href="/adr">ADRs</a></li>
