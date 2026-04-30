@@ -6,7 +6,8 @@ const mocks = vi.hoisted(() => {
   const insertValues = vi.fn().mockResolvedValue(undefined)
   const updateSetWhere = vi.fn().mockResolvedValue(undefined)
   const deleteWhere = vi.fn().mockResolvedValue(undefined)
-  return { findMany, findFirst, insertValues, updateSetWhere, deleteWhere }
+  const selectDistinctFrom = vi.fn()
+  return { findMany, findFirst, insertValues, updateSetWhere, deleteWhere, selectDistinctFrom }
 })
 
 vi.mock("@/lib/db/client", () => ({
@@ -20,12 +21,14 @@ vi.mock("@/lib/db/client", () => ({
     insert: () => ({ values: mocks.insertValues }),
     update: () => ({ set: () => ({ where: mocks.updateSetWhere }) }),
     delete: () => ({ where: mocks.deleteWhere }),
+    selectDistinct: () => ({ from: mocks.selectDistinctFrom }),
   },
 }))
 
 import {
   findAllOkrs,
   findOkrById,
+  findDistinctPeriods,
   createOkr,
   updateKrProgress,
   deleteOkr,
@@ -65,6 +68,7 @@ beforeEach(() => {
   mocks.insertValues.mockResolvedValue(undefined)
   mocks.updateSetWhere.mockResolvedValue(undefined)
   mocks.deleteWhere.mockResolvedValue(undefined)
+  mocks.selectDistinctFrom.mockResolvedValue([])
 })
 
 describe("findAllOkrs", () => {
@@ -230,5 +234,50 @@ describe("deleteOkr", () => {
 
   it("throws Forbidden for Dev role", async () => {
     await expect(deleteOkr("okr-1", "Dev")).rejects.toThrow("Forbidden")
+  })
+})
+
+describe("findDistinctPeriods", () => {
+  it("returns periods sorted descending", async () => {
+    mocks.selectDistinctFrom.mockResolvedValue([
+      { period: "Q1-2026" },
+      { period: "Q3-2025" },
+      { period: "Q2-2026" },
+    ])
+
+    const result = await findDistinctPeriods()
+
+    expect(result).toEqual(["Q3-2025", "Q2-2026", "Q1-2026"].sort().reverse())
+  })
+
+  it("returns empty array when no OKRs exist", async () => {
+    mocks.selectDistinctFrom.mockResolvedValue([])
+
+    const result = await findDistinctPeriods()
+
+    expect(result).toEqual([])
+  })
+})
+
+describe("findAllOkrs with period filter", () => {
+  it("passes period filter when provided", async () => {
+    mocks.findMany.mockResolvedValue([makeOkrRow({ period: "Q2-2026" })])
+
+    const result = await findAllOkrs("Gerencia", null, "Q2-2026")
+
+    expect(result).toHaveLength(1)
+    expect(result[0].period).toBe("Q2-2026")
+    expect(mocks.findMany).toHaveBeenCalledOnce()
+  })
+
+  it("returns all periods when no period filter is given", async () => {
+    mocks.findMany.mockResolvedValue([
+      makeOkrRow({ period: "Q1-2026" }),
+      makeOkrRow({ id: "okr-2", period: "Q2-2026" }),
+    ])
+
+    const result = await findAllOkrs("Gerencia", null)
+
+    expect(result).toHaveLength(2)
   })
 })
