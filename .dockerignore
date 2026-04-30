@@ -1,0 +1,10 @@
+.git
+.github
+.next
+.env*
+node_modules
+quind-architecture-docs
+*.md
+!README.md
+drizzle
+tsconfig.tsbuildinfo
